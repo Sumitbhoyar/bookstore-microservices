@@ -1,14 +1,10 @@
 package com.bookstore.order.service;
 
-import com.bookstore.order.domain.Order;
-import com.bookstore.order.domain.OrderItem;
-import com.bookstore.order.repository.OrderRepository;
-import com.bookstore.order.repository.OrderItemRepository;
-import com.bookstore.order.service.AuditService;
-import com.bookstore.order.service.EventPublisherService;
-import com.bookstore.order.service.InventoryService;
-import com.bookstore.order.service.PaymentService;
-import com.bookstore.order.service.ShippingService;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,10 +12,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.UUID;
+import com.bookstore.order.domain.Order;
+import com.bookstore.order.domain.OrderItem;
+import com.bookstore.order.repository.OrderItemRepository;
+import com.bookstore.order.repository.OrderRepository;
+import com.bookstore.order.service.AuditService;
+import com.bookstore.order.service.EventPublisherService;
+import com.bookstore.order.service.InventoryService;
+import com.bookstore.order.service.PaymentService;
+import com.bookstore.order.service.ShippingService;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
