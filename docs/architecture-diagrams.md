@@ -25,47 +25,47 @@ graph TB
     end
 
     subgraph "Edge Layer"
-        APIGW[AWS API Gateway<br/>• Rate Limiting (100 req/s per user)<br/>• JWT Token Validation<br/>• Request Routing<br/>• CORS Handling<br/>• Request/Response Transformation]
-        CloudFront[AWS CloudFront<br/>• CDN for Static Assets<br/>• Global Distribution<br/>• DDoS Protection]
+        APIGW[AWS API Gateway<br/>- Rate Limiting: 100 req/s per user<br/>- JWT Token Validation<br/>- Request Routing<br/>- CORS Handling<br/>- Request/Response Transformation]
+        CloudFront[AWS CloudFront<br/>- CDN for Static Assets<br/>- Global Distribution<br/>- DDoS Protection]
     end
 
     subgraph "Service Layer"
         subgraph "Java Services (Spring Boot)"
-            Auth[Auth Service<br/>• JWT Issuance<br/>• User Authentication<br/>• Token Validation<br/>• MFA Support]
-            User[User Service<br/>• User Profiles<br/>• Account Management<br/>• Preferences<br/>• Address Book]
-            Catalog[Product Catalog<br/>• Product Metadata<br/>• Inventory Management<br/>• Categories<br/>• Pricing]
-            Order[Order Service<br/>• Order Lifecycle<br/>• Cart Management<br/>• Transaction Processing<br/>• Fulfillment]
+            Auth[Auth Service<br/>- JWT Issuance<br/>- User Authentication<br/>- Token Validation<br/>- MFA Support]
+            User[User Service<br/>- User Profiles<br/>- Account Management<br/>- Preferences<br/>- Address Book]
+            Catalog[Product Catalog<br/>- Product Metadata<br/>- Inventory Management<br/>- Categories<br/>- Pricing]
+            Order[Order Service<br/>- Order Lifecycle<br/>- Cart Management<br/>- Transaction Processing<br/>- Fulfillment]
         end
 
         subgraph "Python Services (FastAPI)"
-            Search[Search Service<br/>• Full-text Search<br/>• Faceted Filtering<br/>• Query Optimization<br/>• Elasticsearch Integration]
-            RecSys[Recommendation Engine<br/>• Collaborative Filtering<br/>• ML Models<br/>• User Behavior Analysis<br/>• A/B Testing]
+            Search[Search Service<br/>- Full-text Search<br/>- Faceted Filtering<br/>- Query Optimization<br/>- Elasticsearch Integration]
+            RecSys[Recommendation Engine<br/>- Collaborative Filtering<br/>- ML Models<br/>- User Behavior Analysis<br/>- A/B Testing]
         end
 
         subgraph "TypeScript Services (NestJS)"
-            Payment[Payment Service<br/>• Stripe Integration<br/>• PCI Compliance<br/>• Payment Processing<br/>• Refund Handling]
-            Notify[Notifications Service<br/>• Email (AWS SES)<br/>• SMS (AWS SNS)<br/>• Webhooks<br/>• Queue Processing]
+            Payment[Payment Service<br/>- Stripe Integration<br/>- PCI Compliance<br/>- Payment Processing<br/>- Refund Handling]
+            Notify[Notifications Service<br/>- Email (AWS SES)<br/>- SMS (AWS SNS)<br/>- Webhooks<br/>- Queue Processing]
         end
     end
 
     subgraph "Data Layer"
-        Postgres[(PostgreSQL RDS<br/>• Multi-AZ Deployment<br/>• ACID Transactions<br/>• Automated Backups<br/>• Read Replicas)]
-        Elastic[(Elasticsearch/OpenSearch<br/>• Full-text Indexing<br/>• Real-time Search<br/>• Analytics<br/>• Multi-AZ)]
-        Dynamo[(DynamoDB<br/>• NoSQL Audit Logs<br/>• Payment Records<br/>• Global Tables<br/>• Streams)]
-        Redis[(Redis ElastiCache<br/>• Session Caching<br/>• Job Queues<br/>• Rate Limiting<br/>• Cache Warming)]
+        Postgres[(PostgreSQL RDS<br/>- Multi-AZ Deployment<br/>- ACID Transactions<br/>- Automated Backups<br/>- Read Replicas)]
+        Elastic[(Elasticsearch/OpenSearch<br/>- Full-text Indexing<br/>- Real-time Search<br/>- Analytics<br/>- Multi-AZ)]
+        Dynamo[(DynamoDB<br/>- NoSQL Audit Logs<br/>- Payment Records<br/>- Global Tables<br/>- Streams)]
+        Redis[(Redis ElastiCache<br/>- Session Caching<br/>- Job Queues<br/>- Rate Limiting<br/>- Cache Warming)]
     end
 
     subgraph "Integration Layer"
-        EventBridge[AWS EventBridge<br/>• Event Pub/Sub<br/>• Cross-Service Communication<br/>• Event Replay<br/>• Dead Letter Queues]
-        SQS[(SQS Queues<br/>• Async Processing<br/>• Message Buffering<br/>• Error Handling)]
-        SNS[(SNS Topics<br/>• Fan-out Messaging<br/>• Email/SMS Delivery<br/>• Webhook Notifications)]
+        EventBridge[AWS EventBridge<br/>- Event Pub/Sub<br/>- Cross-Service Communication<br/>- Event Replay<br/>- Dead Letter Queues]
+        SQS[(SQS Queues<br/>- Async Processing<br/>- Message Buffering<br/>- Error Handling)]
+        SNS[(SNS Topics<br/>- Fan-out Messaging<br/>- Email/SMS Delivery<br/>- Webhook Notifications)]
     end
 
     subgraph "Infrastructure Layer"
-        ECS[AWS ECS Fargate<br/>• Container Orchestration<br/>• Auto-scaling<br/>• Service Discovery<br/>• Rolling Updates]
-        VPC[AWS VPC<br/>• Network Isolation<br/>• Security Groups<br/>• NAT Gateway<br/>• VPC Endpoints]
-        CloudWatch[AWS CloudWatch<br/>• Metrics Collection<br/>• Log Aggregation<br/>• Alerting<br/>• Dashboards]
-        XRay[AWS X-Ray<br/>• Distributed Tracing<br/>• Performance Analysis<br/>• Service Dependencies<br/>• Error Tracking]
+        ECS[AWS ECS Fargate<br/>- Container Orchestration<br/>- Auto-scaling<br/>- Service Discovery<br/>- Rolling Updates]
+        VPC[AWS VPC<br/>- Network Isolation<br/>- Security Groups<br/>- NAT Gateway<br/>- VPC Endpoints]
+        CloudWatch[AWS CloudWatch<br/>- Metrics Collection<br/>- Log Aggregation<br/>- Alerting<br/>- Dashboards]
+        XRay[AWS X-Ray<br/>- Distributed Tracing<br/>- Performance Analysis<br/>- Service Dependencies<br/>- Error Tracking]
     end
 
     Web --> CloudFront
@@ -174,7 +174,7 @@ sequenceDiagram
     participant RecSys as Recommendation Engine
 
     Order->>EventBridge: Publish order.created Event
-    Note over EventBridge: Event Payload:<br/>• orderId: ord_789<br/>• userId: user123<br/>• items: [prod_001 x 2]<br/>• total: $49.98
+    Note over EventBridge: Event Payload:<br/>- orderId: ord_789<br/>- userId: user123<br/>- items: [prod_001 x 2]<br/>- total: $49.98
 
     EventBridge->>Notify: Route to Notifications Queue
     EventBridge->>Search: Route to Search Queue
@@ -429,10 +429,10 @@ flowchart TD
     end
 
     subgraph "Event Consumers"
-        Notify[Notifications Service<br/>• order.created<br/>• payment.*<br/>• user.registered]
-        Search[Search Service<br/>• order.created<br/>• product.updated<br/>• user.activity]
-        RecSys[Recommendation Engine<br/>• order.created<br/>• user.search<br/>• product.viewed]
-        Analytics[Analytics Service<br/>• All events<br/>• Business metrics<br/>• User behavior]
+        Notify[Notifications Service<br/>- order.created<br/>- payment.*<br/>- user.registered]
+        Search[Search Service<br/>- order.created<br/>- product.updated<br/>- user.activity]
+        RecSys[Recommendation Engine<br/>- order.created<br/>- user.search<br/>- product.viewed]
+        Analytics[Analytics Service<br/>- All events<br/>- Business metrics<br/>- User behavior]
     end
 
     subgraph "Message Delivery"
@@ -602,21 +602,21 @@ graph TB
     end
 
     subgraph "AWS Observability Services"
-        CloudWatch[CloudWatch<br/>• Metrics<br/>• Logs<br/>• Alarms<br/>• Dashboards]
-        XRay[X-Ray<br/>• Distributed Tracing<br/>• Service Map<br/>• Performance Analysis]
-        CloudTrail[CloudTrail<br/>• API Audit Logs<br/>• Security Events<br/>• Compliance]
+        CloudWatch[CloudWatch<br/>- Metrics<br/>- Logs<br/>- Alarms<br/>- Dashboards]
+        XRay[X-Ray<br/>- Distributed Tracing<br/>- Service Map<br/>- Performance Analysis]
+        CloudTrail[CloudTrail<br/>- API Audit Logs<br/>- Security Events<br/>- Compliance]
     end
 
     subgraph "Monitoring & Alerting"
-        Dashboards[CloudWatch Dashboards<br/>• Business Metrics<br/>• Technical Metrics<br/>• SLO Tracking]
-        Alarms[CloudWatch Alarms<br/>• Error Rate Alerts<br/>• Latency Alerts<br/>• Resource Alerts]
-        SNS[SNS Topics<br/>• Email Notifications<br/>• SMS Alerts<br/>• PagerDuty Integration]
+        Dashboards[CloudWatch Dashboards<br/>- Business Metrics<br/>- Technical Metrics<br/>- SLO Tracking]
+        Alarms[CloudWatch Alarms<br/>- Error Rate Alerts<br/>- Latency Alerts<br/>- Resource Alerts]
+        SNS[SNS Topics<br/>- Email Notifications<br/>- SMS Alerts<br/>- PagerDuty Integration]
     end
 
     subgraph "Log Aggregation"
-        Kinesis[Kinesis Data Streams<br/>• Real-time Log Processing<br/>• Log Filtering<br/>• Data Transformation]
-        Lambda[Lambda Functions<br/>• Log Enrichment<br/>• Alert Processing<br/>• Metric Calculation]
-        OpenSearch[OpenSearch<br/>• Log Search & Analytics<br/>• Custom Dashboards<br/>• Historical Analysis]
+        Kinesis[Kinesis Data Streams<br/>- Real-time Log Processing<br/>- Log Filtering<br/>- Data Transformation]
+        Lambda[Lambda Functions<br/>- Log Enrichment<br/>- Alert Processing<br/>- Metric Calculation]
+        OpenSearch[OpenSearch<br/>- Log Search & Analytics<br/>- Custom Dashboards<br/>- Historical Analysis]
     end
 
     Java --> CloudWatch
