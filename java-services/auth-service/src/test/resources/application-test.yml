@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    active: test
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+
+  datasource:
+    url: jdbc:tc:postgresql:15:///auth_test
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+
+logging:
+  level:
+    com.bookstore.auth: DEBUG
+    org.springframework.test: DEBUG
+
+management:
+  metrics:
+    export:
+      cloudwatch:
+        enabled: false

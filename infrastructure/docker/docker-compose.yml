@@ -1,0 +1,276 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: bookstore-postgres
+    environment:
+      POSTGRES_DB: bookstore
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - bookstore
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for caching and job queues
+  redis:
+    image: redis:7-alpine
+    container_name: bookstore-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - bookstore
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # Elasticsearch for search functionality
+  elasticsearch:
+    image: elasticsearch:8.11.0
+    container_name: bookstore-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - bookstore
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Kibana for Elasticsearch visualization (optional)
+  kibana:
+    image: kibana:8.11.0
+    container_name: bookstore-kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - bookstore
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5601/api/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # LocalStack for AWS services (SQS, SNS, etc.)
+  localstack:
+    image: localstack/localstack:3.0
+    container_name: bookstore-localstack
+    environment:
+      - SERVICES=sqs,sns,ses,secretsmanager,cognitoidp,dynamodb,events
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    ports:
+      - "4566:4566"            # LocalStack Gateway
+      - "4510-4559:4510-4559"  # External services port range
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - localstack_data:/tmp/localstack
+    networks:
+      - bookstore
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Auth Service
+  auth-service:
+    build:
+      context: ../../java-services/auth-service
+      dockerfile: Dockerfile
+    container_name: bookstore-auth-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=bookstore_auth
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=password
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=development-jwt-secret-key-change-in-production
+      - JWT_EXPIRATION=3600000
+      - AWS_REGION=us-east-1
+      - AWS_ENDPOINT=http://localstack:4566
+      - COGNITO_USER_POOL_ID=us-east-1_test_pool
+      - COGNITO_CLIENT_ID=test-client-id
+      - COGNITO_ISSUER_URI=http://localhost:4566
+    ports:
+      - "8081:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - bookstore
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # User Service
+  user-service:
+    build:
+      context: ../../java-services/user-service
+      dockerfile: Dockerfile
+    container_name: bookstore-user-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=bookstore_users
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=password
+      - AWS_REGION=us-east-1
+      - AWS_ENDPOINT=http://localstack:4566
+      - AUTH_SERVICE_URL=http://auth-service:8081/api/v1/auth
+    ports:
+      - "8082:8082"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      auth-service:
+        condition: service_healthy
+    networks:
+      - bookstore
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Product Catalog Service
+  product-catalog:
+    build:
+      context: ../../java-services/product-catalog
+      dockerfile: Dockerfile
+    container_name: bookstore-product-catalog
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=bookstore_catalog
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=password
+      - AWS_REGION=us-east-1
+      - AWS_ENDPOINT=http://localstack:4566
+      - EVENTBRIDGE_BUS_NAME=bookstore-events
+      - AUTH_SERVICE_URL=http://auth-service:8081/api/v1/auth
+      - USER_SERVICE_URL=http://user-service:8082/api/v1/users
+      - SEARCH_SERVICE_URL=http://search-service:8085/api/v1/search
+    ports:
+      - "8083:8083"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - bookstore
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Order Service
+  order-service:
+    build:
+      context: ../../java-services/order-service
+      dockerfile: Dockerfile
+    container_name: bookstore-order-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=bookstore_orders
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=password
+      - AWS_REGION=us-east-1
+      - AWS_ENDPOINT=http://localstack:4566
+      - EVENTBRIDGE_BUS_NAME=bookstore-events
+      - AUTH_SERVICE_URL=http://auth-service:8081/api/v1/auth
+      - USER_SERVICE_URL=http://user-service:8082/api/v1/users
+      - PRODUCT_CATALOG_URL=http://product-catalog:8083/api/v1/products
+      - PAYMENT_SERVICE_URL=http://payment-processor:8087/api/v1/payments
+      - NOTIFICATIONS_URL=http://notifications-service:8086/api/v1/notifications
+    ports:
+      - "8084:8084"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      product-catalog:
+        condition: service_healthy
+    networks:
+      - bookstore
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8084/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # pgAdmin for database management (optional)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: bookstore-pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@bookstore.com
+      - PGADMIN_DEFAULT_PASSWORD=admin123
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - bookstore
+
+  # Redis Commander for Redis management (optional)
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: bookstore-redis-commander
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8082:8081"
+    depends_on:
+      - redis
+    networks:
+      - bookstore
+
+volumes:
+  postgres_data:
+  redis_data:
+  elasticsearch_data:
+  localstack_data:
+
+networks:
+  bookstore:
+    driver: bridge

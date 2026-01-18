@@ -1,0 +1,507 @@
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+replay_pid*
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle
+build/
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# Eclipse
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Mac OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env
+.env.test
+.env.local
+.env.production
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Gatsby files
+.cache/
+public
+
+# Storybook build outputs
+.out
+.storybook-out
+
+# Temporary folders
+tmp/
+temp/
+
+# Editor directories and files
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Local Netlify folder
+.netlify
+
+# Docker
+.dockerignore
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Terraform
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# AWS
+.aws/
+
+# TestContainers
+testcontainers.properties
+
+# Application specific
+application-local.yml
+application-dev.yml
+application-prod.yml
+
+# Cursor IDE
+.cursor/
+
+# JetBrains IDEs
+*.iml
+.idea/
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Backup files
+*.bak
+*.backup
+*.orig
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Java heap dumps
+*.hprof
+
+# Java flight recordings
+*.jfr
+
+# Kubernetes
+*.yaml.bak
+*.yml.bak
+
+# Helm
+chart/*/charts/
+chart/*/tmp/
+
+# Docker Compose override files
+docker-compose.override.yml
+docker-compose.*.yml
+
+# Local development files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Test reports and coverage
+test-results/
+coverage/
+*.exec
+jacoco.exec
+jacoco/
+
+# Surefire and Failsafe reports
+surefire-reports/
+failsafe-reports/
+
+# Spring Boot
+spring.log
+
+# Application logs
+logs/
+*.log
+
+# PostgreSQL data (if running locally)
+postgres_data/
+
+# Redis data (if running locally)
+redis_data/
+
+# Elasticsearch data (if running locally)
+elasticsearch_data/
+
+# Prometheus data (if running locally)
+prometheus_data/
+
+# Grafana data (if running locally)
+grafana_data/
+
+# Localstack data (if running locally)
+localstack_data/
+
+# Terraform state files
+terraform.tfstate
+terraform.tfstate.backup
+*.tfvars
+
+# AWS CLI
+.aws/
+
+# SSH keys (if any)
+*.pem
+*.key
+*.pub
+
+# Certificate files
+*.crt
+*.key
+*.p12
+*.jks
+
+# Configuration files with secrets
+*secret*
+*credential*
+*password*
+
+# Development certificates
+*.pem
+*.crt
+*.key
+
+# IDE specific
+.project
+.classpath
+.settings/
+bin/
+gen/
+
+# Eclipse
+.metadata/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+Session.vim
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Atom
+.atom/
+
+# Visual Studio
+.vs/
+
+# Rider
+.idea/
+
+# Fleet
+.fleet/
+
+# Cursor
+.cursor/
+
+# Temporary project files
+*.tmp
+*.temp
+
+# Build artifacts
+dist/
+build/
+out/
+
+# NPM
+package-lock.json
+yarn.lock
+
+# Python (if any)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Ruby (if any)
+.bundle/
+.log
+.tmp/
+
+# Go (if any)
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Rust (if any)
+target/
+Cargo.lock
+
+# Node.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local environment overrides
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Vercel
+.vercel
+
+# Sentry
+.sentryclirc
+
+# Local database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup files
+*.backup
+*.bak
+
+# Swap files
+*.swp
+*.swo
+
+# Lock files
+*.lock
+*.Lock
+
+# Cache directories
+.cache/
+.tmp/
+.temp/
+
+# OS X
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.nfs*
+
+# Application specific patterns
+# Bookstore microservices specific
+infrastructure/aws/terraform.tfstate*
+infrastructure/aws/.terraform/
+java-services/*/target/
+java-services/*/pom.xml.tag
+java-services/*/pom.xml.releaseBackup
+java-services/*/pom.xml.versionsBackup
+java-services/*/pom.xml.next
+java-services/*/release.properties
+java-services/*/dependency-reduced-pom.xml
+java-services/*/buildNumber.properties
+java-services/*/.mvn/timing.properties
+java-services/*/.mvn/wrapper/maven-wrapper.jar
+
+# Docker volumes
+docker-volumes/
+postgres_data/
+redis_data/
+elasticsearch_data/
+
+# Test containers
+testcontainers.properties
+.containerid
+
+# Kubernetes manifests with environment-specific data
+k8s/overlays/*/secret*.yaml
+k8s/overlays/*/configmap*.yaml
+
+# Helm charts
+chart/*/templates/_helpers.tpl
+chart/*/templates/tests/
+
+# CI/CD
+.github/workflows/*.yml.bak
+.gitlab-ci.yml.bak
+
+# Documentation builds
+docs/_build/
+docs/.doctrees/
+
+# Local development scripts
+scripts/local/
+*.sh.tmp

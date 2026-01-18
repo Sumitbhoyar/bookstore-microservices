@@ -1,0 +1,128 @@
+server:
+  port: 8083
+  servlet:
+    context-path: /api/v1/products
+
+spring:
+  application:
+    name: product-catalog
+
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:bookstore_catalog}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 300000
+      max-lifetime: 1200000
+      connection-timeout: 20000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+logging:
+  level:
+    com.bookstore.catalog: INFO
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{correlationId:-}] %logger{36} - %msg%n"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when_authorized
+  metrics:
+    export:
+      cloudwatch:
+        enabled: ${CLOUDWATCH_METRICS_ENABLED:false}
+        namespace: Bookstore/ProductCatalog
+        batch-size: 20
+
+# AWS Configuration
+aws:
+  region: ${AWS_REGION:us-east-1}
+  eventbridge:
+    bus-name: ${EVENTBRIDGE_BUS_NAME:bookstore-events}
+
+# Service URLs (for service-to-service communication)
+services:
+  auth-service: ${AUTH_SERVICE_URL:http://localhost:8081/api/v1/auth}
+  user-service: ${USER_SERVICE_URL:http://localhost:8082/api/v1/users}
+  search-service: ${SEARCH_SERVICE_URL:http://localhost:8085/api/v1/search}
+
+# Pagination defaults
+pagination:
+  default-page-size: 20
+  max-page-size: 100
+
+# Inventory thresholds
+inventory:
+  low-stock-threshold: 10
+  critical-stock-threshold: 5
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bookstore_catalog
+    username: postgres
+    password: password
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+
+logging:
+  level:
+    com.bookstore.catalog: DEBUG
+
+management:
+  metrics:
+    export:
+      cloudwatch:
+        enabled: false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    url: jdbc:tc:postgresql:15:///bookstore_catalog_test
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+
+management:
+  metrics:
+    export:
+      cloudwatch:
+        enabled: false
