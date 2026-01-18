@@ -1,10 +1,11 @@
 package com.bookstore.auth.config;
 
-import com.bookstore.auth.service.AuthService;
+import com.bookstore.auth.config.JwtAuthenticationFilter;
 import com.bookstore.auth.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,12 +25,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtService jwtService;
-    private final AuthService authService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Autowired
-    public SecurityConfig(JwtService jwtService, AuthService authService) {
+    public SecurityConfig(JwtService jwtService, @Lazy JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtService = jwtService;
-        this.authService = authService;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     @Bean
@@ -55,7 +56,7 @@ public class SecurityConfig {
             )
 
             // Add JWT authentication filter
-            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
             // Configure exception handling
             .exceptionHandling(exceptions -> exceptions
@@ -72,11 +73,6 @@ public class SecurityConfig {
             );
 
         return http.build();
-    }
-
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtService, authService);
     }
 
     @Bean

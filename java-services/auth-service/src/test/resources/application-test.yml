@@ -1,15 +1,8 @@
 spring:
-  profiles:
-    active: test
-
   jpa:
     hibernate:
       ddl-auto: create-drop
     show-sql: false
-
-  datasource:
-    url: jdbc:tc:postgresql:15:///auth_test
-    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
 
 logging:
   level:
@@ -21,3 +14,20 @@ management:
     export:
       cloudwatch:
         enabled: false
+
+# JWT Configuration for tests (needs to be at least 256 bits)
+jwt:
+  secret: this-is-a-very-long-jwt-secret-key-that-is-at-least-256-bits-for-testing-purposes-only-and-should-never-be-used-in-production
+  expiration: 3600000
+
+# AWS Configuration for tests
+aws:
+  region: us-east-1
+  cognito:
+    user-pool-id: test-pool-id
+    client-id: test-client-id
+    issuer-uri: https://test-issuer-uri.com
+
+# Service URLs for tests
+services:
+  user-service: http://localhost:8082/api/v1/users
